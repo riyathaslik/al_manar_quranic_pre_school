@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Winner Poster Generator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Great+Vibes&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+
+
+/* ================= BODY ================= */
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #e2b674;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ================= FORM ================= */
+.form-box {
+    background: linear-gradient(180deg, #ffffff, #f1f7ff);
+    padding: 35px;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 18px;
+    box-shadow: 0 25px 55px rgba(0,0,0,0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-box h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #e0c77f;
+}
+
+.form-box input {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 1px solid #cfd8dc;
+    font-size: 14px;
+}
+
+/* GENERATE BUTTON */
+.btn-generate {
+    width: 100%;
+    padding: 15px;
+    margin-top: 15px;
+    background: linear-gradient(135deg, #fad46d, #42a5f5);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-generate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(219, 186, 77, 0.6);
+}
+
+/* ================= POSTER ================= */
+.poster {
+    width: 500px;
+    height: 800px;
+    background-image: url("bgrnd3.jpg");
+    display: none;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 35px 80px rgba(0,0,0,0.9);
+}
+
+.poster::before {
+    top: -40px;
+    left: -40px;
+}
+
+.poster::after {
+    bottom: -50px;
+    right: -50px;
+    transform: rotate(180deg);
+}
+
+/* LOGO */
+.logo-container {
+    margin-top: 35px;
+    display: flex;
+    justify-content: center;
+}
+
+#orgLogo {
+    max-width: 180px;
+    max-height: 100px;
+    filter: drop-shadow(0 0 12px rgba(255,255,255,0.35));
+}
+
+/* TEXT */
+.congrats {
+    font-family: 'Great Vibes', cursive;
+    font-size: 54px;
+    color: #0a0a0a;
+    text-align: center;
+}
+
+.exam-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: rgb(0, 0, 0);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+/* PHOTO */
+.photo-frame {
+    margin: 35px auto 10px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffffff, #ffffff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-frame img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #e2b674(226, 185, 122);
+}
+
+/* NAME */
+.student-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 30px;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-top: 10px;
+}
+
+/* RANK */
+.rank-title {
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: #0f0f0f;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.rank-number {
+    font-size: 42px;
+    font-weight: 900;
+    color: #0c0b0b;
+    text-align: center;
+}
+
+/* SCHOOL */
+.school-info {
+    font-size: 25px;
+    font-weight: 700;
+    color: #080808;
+    text-align: center;
+    margin-top: 22px;
+}
+/* MOBILE No. */
+.mobile-no{
+    font-size: 25px;
+    color: #080808;
+    text-align: center;
+    margin-top: 15px;     
+}
+/* ================= DOWNLOAD BUTTON ================= */
+.btn-download {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 16px 28px;
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    font-weight: 700;
+    display: none;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.6);
+}
+</style>
+</head>
+
+<body>
+
+<div class="form-box" id="formBox">
+    <h2>Poster Generator</h2>
+    <input type="text" id="nameInput" placeholder="Student Name">
+    <input type="number" id="rankInput" placeholder="Rank (number only)">
+    <input type="file" id="imageInput" accept="image/*">
+    <button class="btn-generate" onclick="generatePoster()">Generate Poster</button>
+</div>
+
+<div class="poster" id="poster">
+
+    <div class="logo-container">
+        <img id="orgLogo">
+    </div>
+
+    <div class="congrats">Congratulations</div>
+    <div class="exam-title">All Kerala Talent Search Exam</div>
+
+    <div class="photo-frame">
+        <img id="posterImage">
+    </div>
+
+    <div class="student-name" id="posterName"></div>
+
+    <div class="rank-title">RANK</div>
+    <div class="rank-number" id="posterRank"></div>
+
+    <div class="school-info">
+         AL MANAR QURANIC PRE SCHOOL <br>
+         MELANGADI  KONDOTTY
+    </div>
+    <div class="mobile-no">Phone:9072252529</div>
+</div>
+
+<button class="btn-download" id="downloadBtn" onclick="downloadPoster()">Download</button>
+
+<script>
+const myLogo = "LOGO-QPSSS.jpg";
+
+function generatePoster() {
+    if (!nameInput.value || !rankInput.value || !imageInput.files[0]) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    posterName.innerText = nameInput.value;
+    posterRank.innerText = rankInput.value;
+    orgLogo.src = myLogo;
+
+    const reader = new FileReader();
+    reader.onload = e => {
+        posterImage.src = e.target.result;
+        formBox.style.display = "none";
+        poster.style.display = "block";
+        downloadBtn.style.display = "block";
+    };
+    reader.readAsDataURL(imageInput.files[0]);
+}
+
+function downloadPoster() {
+    html2canvas(poster, {
+        scale: window.devicePixelRatio,
+        backgroundColor: "#0b1f3a"
+    }).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "Winner_Poster.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    });
+}
+</script>
+
+</body>
+</html>
